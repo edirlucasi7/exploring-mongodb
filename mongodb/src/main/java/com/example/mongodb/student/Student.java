@@ -1,0 +1,48 @@
+package com.example.mongodb.student;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.time.LocalDate;
+import java.time.Period;
+
+@Document(collection = "student")
+public class Student {
+
+    private ObjectId id;
+
+    @NotBlank
+    private String name;
+
+    @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate dateOfBirth;
+
+    @Transient
+    private int age;
+
+    public Student(String name, LocalDate dateOfBirth) {
+        this.name = name;
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public int getAge() {
+        return Period.between(this.dateOfBirth, LocalDate.now()).getYears();
+    }
+
+    public ObjectId getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+}
