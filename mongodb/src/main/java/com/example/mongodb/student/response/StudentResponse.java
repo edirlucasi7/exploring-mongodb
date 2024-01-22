@@ -1,11 +1,13 @@
-package com.example.mongodb.student;
+package com.example.mongodb.student.response;
 
-public class StudentDTO {
+import com.example.mongodb.student.Student;
+
+public class StudentResponse {
 
     private String name;
     private int age;
 
-    public StudentDTO(Student student) {
+    public StudentResponse(Student student) {
         this.name = student.getName();
         this.age = student.getAge();
     }

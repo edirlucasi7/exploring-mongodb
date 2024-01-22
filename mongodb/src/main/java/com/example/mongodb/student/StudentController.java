@@ -1,5 +1,7 @@
 package com.example.mongodb.student;
 
+import com.example.mongodb.student.request.StudentRequest;
+import com.example.mongodb.student.response.StudentsResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,10 +29,10 @@ public class StudentController {
     }
 
     @GetMapping("/api/students")
-    public ResponseEntity<StudentsDTO> findAll() {
+    public ResponseEntity<StudentsResponse> findAll() {
 
         List<Student> students = studentRepository.findAll();
 
-        return ResponseEntity.ok(new StudentsDTO(students));
+        return ResponseEntity.ok(new StudentsResponse(students));
     }
 }

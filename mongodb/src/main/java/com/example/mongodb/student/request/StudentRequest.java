@@ -1,5 +1,6 @@
-package com.example.mongodb.student;
+package com.example.mongodb.student.request;
 
+import com.example.mongodb.student.Student;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
