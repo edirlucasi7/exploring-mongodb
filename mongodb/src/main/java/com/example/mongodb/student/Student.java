@@ -1,5 +1,6 @@
 package com.example.mongodb.student;
 
+import com.example.mongodb.student.request.StudentRequest;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -44,5 +45,11 @@ public class Student {
 
     public LocalDate getDateOfBirth() {
         return dateOfBirth;
+    }
+
+    public Student update(StudentRequest studentRequest) {
+        this.name = studentRequest.name();
+        this.dateOfBirth = studentRequest.dateOfBirth();
+        return this;
     }
 }

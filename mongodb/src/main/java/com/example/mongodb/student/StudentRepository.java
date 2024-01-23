@@ -3,8 +3,7 @@ package com.example.mongodb.student;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public interface StudentRepository extends MongoRepository<Student, UUID> {
 
@@ -14,5 +13,5 @@ public interface StudentRepository extends MongoRepository<Student, UUID> {
 
     boolean existsById(ObjectId id);
 
-    Student findById(ObjectId id);
+    Optional<Student> findById(ObjectId id);
 }
