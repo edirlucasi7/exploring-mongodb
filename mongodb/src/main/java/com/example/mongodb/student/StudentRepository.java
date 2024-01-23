@@ -9,7 +9,7 @@ public interface StudentRepository extends MongoRepository<Student, UUID> {
 
     List<Student> findByName();
 
-    Student deleteById(ObjectId id);
+    void deleteById(ObjectId id);
 
     boolean existsById(ObjectId id);
 

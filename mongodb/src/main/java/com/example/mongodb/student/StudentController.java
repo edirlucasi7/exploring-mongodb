@@ -52,11 +52,11 @@ public class StudentController {
 
     @DeleteMapping("/api/student/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable String id) {
-        Optional<Student> optionalStudent = studentRepository.findById(new ObjectId(id));
-        if (optionalStudent.isEmpty()) return ResponseEntity.notFound().build();
+        ObjectId objectId = new ObjectId(id);
+        if (!studentRepository.existsById(objectId)) return ResponseEntity.notFound().build();
 
-        studentRepository.delete(optionalStudent.get());
+        studentRepository.deleteById(objectId);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("student with objectId: %s deleted" + id);
     }
 }
