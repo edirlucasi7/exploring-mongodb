@@ -34,7 +34,7 @@ db.createUser(
 
 ```
 use admin;
-db.system.users.find()
+db.system.users.find();
 ```
 
 ## Configurações específicas do banco de dados:
@@ -92,4 +92,14 @@ Obs:
 		}
 	]
 }
-``` 
+```
+
+* Para atualizar um documento com as informações do estudante, basta mandar uma requisição `PUT` para a url: `http://localhost:8081/api/student/update/{id}`, com o seguinte corpo:
+
+```
+{
+	"name": "Pedro Mirage Icety (Updated)",
+	"dateOfBirth": "2020-06-21"
+}
+
+* Para deletar um documento com as informações do estudante, basta mandar uma requisição `DELETE` para a url: `http://localhost:8081/api/student/delete/{id}`, passando como parâmetro na url o ObjectId que referencia o documento.
