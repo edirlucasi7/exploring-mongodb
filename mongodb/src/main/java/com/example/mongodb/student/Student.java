@@ -10,10 +10,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Objects;
 
 @Document(collection = "student")
 public class Student {
 
+    @NotNull
     private ObjectId id;
 
     @NotBlank
@@ -31,25 +33,34 @@ public class Student {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public int getAge() {
-        return Period.between(this.dateOfBirth, LocalDate.now()).getYears();
-    }
-
     public ObjectId getId() {
         return id;
+    }
+
+    public int getAge() {
+        return Period.between(this.dateOfBirth, LocalDate.now()).getYears();
     }
 
     public String getName() {
         return name;
     }
 
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
-
     public Student update(StudentRequest studentRequest) {
         this.name = studentRequest.name();
         this.dateOfBirth = studentRequest.dateOfBirth();
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Student student = (Student) o;
+        return Objects.equals(id, student.id) && Objects.equals(name, student.name) && Objects.equals(dateOfBirth, student.dateOfBirth);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, dateOfBirth);
     }
 }
