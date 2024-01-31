@@ -65,9 +65,26 @@ db.runCommand({
 })
 ```
 
+* Também foi criada uma restrição para a duplicidade de nomes para a coleção de estudantes:
+
+```
+db.student.createIndex({ name: 1 }, { unique: true })
+```
+
 Obs:
 
-- A utilização do `validationAction` como `warn` é para que o mongodb não retorne um erro para a aplicação, caso minha aplicação back-end envie dados que não correspodam as regras especificadas. E com o campo `validationLevel` como `moderate` a aplicação não persiste informações que não estejam definidas no esquema, somente gerando um log de violação da restrição especificada. (No presente momento, com os conhecimentos atuais, achei melhor seguir assim. Jogando parte da resposabilidade de validações para a aplicação back-end). 
+- A utilização do `validationAction` como `warn` é para que o mongodb não retorne um erro para a aplicação, caso minha aplicação back-end envie dados que não correspodam as regras especificadas. E com o campo `validationLevel` como `moderate` a aplicação não persiste informações que não estejam definidas no esquema, somente gerando um log de violação da restrição especificada. (No presente momento, com os conhecimentos atuais, achei melhor seguir assim. Jogando parte da resposabilidade de validações para a aplicação back-end).
+
+## Falando um pouco sobre a modelagem:
+
+* Para a coleção `student` temos as seguintes indormações:
+
+![image](https://github.com/edirlucasi7/exploring-mongodb/assets/28410756/ce79570f-f1a0-40f9-b02d-7868e4908670)
+
+* Para a coleção `subject` utilizamos a desnormalização dos dados, optando por replicar somente o nome dos estudantes matriculados na disciplina, além do `ObjectId` para garantir a consistência dos dados.
+
+![image](https://github.com/edirlucasi7/exploring-mongodb/assets/28410756/a559ea11-a103-47e1-859e-1717241afd27)
+
 
 ### Endpoints disponíveis:
 
@@ -80,6 +97,8 @@ Obs:
 	"dateOfBirth": "2020-06-21"
 }
 ```
+
+Obs: Para o endpoint acima, foi implementao um "cache" em memória de todos os estudantes existentes na base para checar duplicidade de nomes, que é uma restrição imposta pelo banco de dados.
 
 * Para buscar o nome e idade de todos os estudantes, basta fazer uma requisição `GET` para a url: `http://localhost:8081/api/students`. O retorno esperado segue o seguinte formato:
 
@@ -104,3 +123,21 @@ Obs:
 ```
 
 * Para deletar um documento com as informações do estudante, basta mandar uma requisição `DELETE` para a url: `http://localhost:8081/api/student/delete/{id}`, passando como parâmetro na url o ObjectId que referencia o documento.
+
+* Para cadastrar um documento com as informações de disciplina e seus respectivos estudantes, basta mandar uma requisição `POST` para url: `http://localhost:8081/api/subject/create`, com o seguinte corpo:
+
+```
+{
+	"name": "ANALISE E DESENVOLVIMENTO DE SISTEMAS",
+	"code": 1718,
+	"workload": 48,
+	"studentsEnrollment": [
+		{
+			"studentId": "65b6a643ebc35069484e90e8",
+			"name": "Pedro Mirage Icety"
+		}
+	]
+}
+```
+
+Obs: O endpoint acima valida se todos os estudantes da disciplina em questão, realmente existem na base de dados.
