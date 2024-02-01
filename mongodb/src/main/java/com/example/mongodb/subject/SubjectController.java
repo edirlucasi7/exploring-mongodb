@@ -20,7 +20,6 @@ public class SubjectController {
 
     private final SubjectRepository subjectRepository;
     private final StudentRepository studentRepository;
-
     private final StudentEnrollmentValidator studentEnrollmentValidator;
 
     public SubjectController(SubjectRepository subjectRepository, StudentRepository studentRepository, StudentEnrollmentValidator studentEnrollmentValidator) {
