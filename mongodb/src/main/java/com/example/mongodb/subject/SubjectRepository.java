@@ -10,7 +10,7 @@ import java.util.*;
 @Repository
 public interface SubjectRepository extends MongoRepository<Subject, UUID> {
 
-    List<Subject> findByName(String name);
+    Optional<Subject> findByName(String name);
 
     void deleteById(ObjectId id);
 

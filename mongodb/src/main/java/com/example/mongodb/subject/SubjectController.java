@@ -11,9 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.example.mongodb.utils.StringUtils.removeExtraEmptySpacesAndLines;
 
 @Controller
 public class SubjectController {
@@ -31,9 +32,14 @@ public class SubjectController {
     @Transactional
     @PostMapping("/api/subject/create")
     public ResponseEntity<?> save(@Valid @RequestBody SubjectRequest subjectRequest) {
+        String subjectName = removeExtraEmptySpacesAndLines(subjectRequest.name());
+        Optional<Subject> optionalSubject = subjectRepository.findByName(subjectName);
+        if (optionalSubject.isPresent()) {
+            return ResponseEntity.badRequest().body(new ErrorResultBody(List.of("There is already a subject with the name: %s".formatted(subjectName))));
+        }
+
         Set<ObjectId> studentIds = subjectRequest.studentsEnrollment().stream().map(StudentEnrollmentRequest::studentId).collect(Collectors.toSet());
         Map<ObjectId, String> existingStudent = studentRepository.findAllByIdIn(studentIds).stream().collect(Collectors.toMap(Student::getId, Student::getName));
-
         if (!studentEnrollmentValidator.isValid(studentIds, existingStudent.keySet())) {
             return ResponseEntity.badRequest().body(new ErrorResultBody(studentEnrollmentValidator.getErrors()));
         }

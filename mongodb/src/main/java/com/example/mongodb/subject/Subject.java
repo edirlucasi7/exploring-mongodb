@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.example.mongodb.utils.StringUtils.removeExtraEmptySpacesAndLines;
+
 @Document(collection = "subject")
 public class Subject {
 
@@ -30,8 +32,11 @@ public class Subject {
 
     private Set<StudentEnrollment> studentsEnrollment;
 
+    @Deprecated
+    public Subject() {}
+
     public Subject(String name, Long code, Long workload, Map<ObjectId, String> existingStudent) {
-        this.name = name;
+        this.name = removeExtraEmptySpacesAndLines(name);
         this.code = code;
         this.workload = workload;
         this.studentsEnrollment = existingStudent.entrySet().stream()
