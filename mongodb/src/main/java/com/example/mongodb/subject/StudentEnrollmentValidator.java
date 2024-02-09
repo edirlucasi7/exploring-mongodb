@@ -1,6 +1,5 @@
 package com.example.mongodb.subject;
 
-import com.example.mongodb.student.StudentRepository;
 import org.apache.commons.collections4.SetUtils;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;

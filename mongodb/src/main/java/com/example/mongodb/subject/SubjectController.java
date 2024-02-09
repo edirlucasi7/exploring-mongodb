@@ -9,9 +9,9 @@ import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,13 +32,13 @@ public class SubjectController {
     @PostMapping("/api/subject/create")
     public ResponseEntity<?> save(@Valid @RequestBody SubjectRequest subjectRequest) {
         Set<ObjectId> studentIds = subjectRequest.studentsEnrollment().stream().map(StudentEnrollmentRequest::studentId).collect(Collectors.toSet());
-        Set<ObjectId> existingStudent = studentRepository.findAllByIdIn(studentIds).stream().map(Student::getId).collect(Collectors.toSet());
+        Map<ObjectId, String> existingStudent = studentRepository.findAllByIdIn(studentIds).stream().collect(Collectors.toMap(Student::getId, Student::getName));
 
-        if (!studentEnrollmentValidator.isValid(studentIds, existingStudent)) {
+        if (!studentEnrollmentValidator.isValid(studentIds, existingStudent.keySet())) {
             return ResponseEntity.badRequest().body(new ErrorResultBody(studentEnrollmentValidator.getErrors()));
         }
 
-        Subject subject = subjectRequest.toModel();
+        Subject subject = subjectRequest.toModel(existingStudent);
         subjectRepository.save(subject);
 
         return ResponseEntity.ok("subject created with success");

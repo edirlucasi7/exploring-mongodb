@@ -1,11 +1,11 @@
 package com.example.mongodb.subject;
 
-import com.example.mongodb.subject.request.StudentEnrollmentRequest;
 import jakarta.validation.constraints.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -30,13 +30,13 @@ public class Subject {
 
     private Set<StudentEnrollment> studentsEnrollment;
 
-    public Subject(String name, Long code, Long workload, Set<StudentEnrollmentRequest> studentsEnrollment) {
+    public Subject(String name, Long code, Long workload, Map<ObjectId, String> existingStudent) {
         this.name = name;
         this.code = code;
         this.workload = workload;
-        this.studentsEnrollment = studentsEnrollment.stream()
+        this.studentsEnrollment = existingStudent.entrySet().stream()
                 .map(enrollmentRequest ->
-                        new StudentEnrollment(enrollmentRequest.studentId(), enrollmentRequest.name()))
+                        new StudentEnrollment(enrollmentRequest.getKey(), enrollmentRequest.getValue()))
                 .collect(Collectors.toSet());
     }
 
