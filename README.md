@@ -133,11 +133,10 @@ Obs: Para o endpoint acima, foi implementao um "cache" em memória de todos os e
 	"workload": 48,
 	"studentsEnrollment": [
 		{
-			"studentId": "65b6a643ebc35069484e90e8",
-			"name": "Pedro Mirage Icety"
+			"studentId": "65b6a643ebc35069484e90e8"
 		}
 	]
 }
 ```
 
-Obs: O endpoint acima valida se todos os estudantes da disciplina em questão, realmente existem na base de dados.
+Obs: O endpoint acima valida se todos os estudantes da disciplina em questão, realmente existem na base de dados e mapeia o nome de acordo com seu `ObjectId`. E também não permite mais de uma disciplina com o mesmo nome (descondirerando espaços em branco a mais e quebras de linhas)
