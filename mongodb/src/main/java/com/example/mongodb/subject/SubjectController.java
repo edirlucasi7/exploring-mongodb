@@ -78,9 +78,38 @@ public class SubjectController {
         return ResponseEntity.ok("success");
     }
 
+    @Transactional
+    @PutMapping("/api/subject/{code}/add/students")
+    public ResponseEntity<?> removeEnrollments(@PathVariable Long code,
+                                            @NotEmpty(message = "The enrollment list is not empty")
+                                            @NoNullElements(message = "The enrollment list cannot contain null values")
+                                            @RequestBody List<@Valid StudentEnrollmentRequest> studentEnrollmentRequests) {
+        Subject subjectByCode = subjectRepository.findByCode(code).orElseThrow(NotFoundException::new);
+
+        Set<ObjectId> studentIds = studentEnrollmentRequests.stream().map(StudentEnrollmentRequest::studentId).collect(Collectors.toSet());
+        Set<Student> students = studentRepository.findAllByIdIn(studentIds);
+
+        Set<StudentEnrollment> studentEnrollments = students.stream().map(student ->
+                new StudentEnrollment(valueOf(student.getId()), student.getName())).collect(Collectors.toSet());
+        subjectByCode.removeStudents(studentEnrollments);
+        subjectRepository.save(subjectByCode);
+
+        return ResponseEntity.ok("success");
+    }
+
     @GetMapping("/api/subjects")
     public ResponseEntity<?> findAll() {
         List<Subject> subjects = subjectRepository.findAll();
         return ResponseEntity.ok(new SubjectsResponse(subjects));
+    }
+
+    @DeleteMapping("/api/subject/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable String id) {
+        ObjectId objectId = new ObjectId(id);
+        if (!subjectRepository.existsById(objectId)) return ResponseEntity.notFound().build();
+
+        subjectRepository.deleteById(objectId);
+
+        return ResponseEntity.ok("subject with objectId: %s deleted" + id);
     }
 }

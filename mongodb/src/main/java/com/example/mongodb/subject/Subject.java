@@ -49,6 +49,10 @@ public class Subject {
         this.studentsEnrollment.addAll(studentsEnrollment);
     }
 
+    public void removeStudents(Set<StudentEnrollment> studentsEnrollment) {
+        this.studentsEnrollment.removeAll(studentsEnrollment);
+    }
+
     public ObjectId getId() {
         return id;
     }
