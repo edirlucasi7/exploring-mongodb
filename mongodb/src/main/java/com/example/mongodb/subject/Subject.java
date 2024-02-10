@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.example.mongodb.utils.StringUtils.removeExtraEmptySpacesAndLines;
+import static java.lang.String.valueOf;
 
 @Document(collection = "subject")
 public class Subject {
@@ -41,8 +42,12 @@ public class Subject {
         this.workload = workload;
         this.studentsEnrollment = existingStudent.entrySet().stream()
                 .map(enrollmentRequest ->
-                        new StudentEnrollment(enrollmentRequest.getKey(), enrollmentRequest.getValue()))
+                        new StudentEnrollment(valueOf(enrollmentRequest.getKey()), enrollmentRequest.getValue()))
                 .collect(Collectors.toSet());
+    }
+
+    public ObjectId getId() {
+        return id;
     }
 
     public String getName() {

@@ -1,7 +1,6 @@
 package com.example.mongodb.student.response;
 
 import com.example.mongodb.student.Student;
-import com.example.mongodb.student.response.StudentResponse;
 
 import java.util.List;
 

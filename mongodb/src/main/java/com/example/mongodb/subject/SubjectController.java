@@ -4,6 +4,7 @@ import com.example.mongodb.student.Student;
 import com.example.mongodb.student.StudentRepository;
 import com.example.mongodb.subject.messageError.ErrorResultBody;
 import com.example.mongodb.subject.request.StudentEnrollmentRequest;
+import com.example.mongodb.subject.response.SubjectsResponse;
 import jakarta.validation.Valid;
 import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
@@ -48,5 +49,11 @@ public class SubjectController {
         subjectRepository.save(subject);
 
         return ResponseEntity.ok("subject created with success");
+    }
+
+    @GetMapping("/api/subjects")
+    public ResponseEntity<?> findAll() {
+        List<Subject> subjects = subjectRepository.findAll();
+        return ResponseEntity.ok(new SubjectsResponse(subjects));
     }
 }

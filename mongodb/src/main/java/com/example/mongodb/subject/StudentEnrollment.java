@@ -1,14 +1,13 @@
 package com.example.mongodb.subject;
 
 import jakarta.validation.constraints.NotNull;
-import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
 
 public class StudentEnrollment {
 
     @NotNull
-    private ObjectId studentId;
+    private String studentId;
 
     @NotNull
     private String name;
@@ -16,12 +15,12 @@ public class StudentEnrollment {
     @NotNull
     private LocalDate enrollment = LocalDate.now();
 
-    public StudentEnrollment(ObjectId studentId, String name) {
+    public StudentEnrollment(String studentId, String name) {
         this.studentId = studentId;
         this.name = name;
     }
 
-    public ObjectId getStudentId() {
+    public String getStudentId() {
         return studentId;
     }
 
