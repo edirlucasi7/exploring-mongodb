@@ -2,15 +2,17 @@ package com.example.mongodb.student;
 
 import com.example.mongodb.student.request.StudentRequest;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Objects;
+
+import static com.example.mongodb.utils.StringUtils.removeExtraEmptySpacesAndLines;
 
 @Document(collection = "student")
 public class Student {
@@ -29,7 +31,7 @@ public class Student {
     private int age;
 
     public Student(String name, LocalDate dateOfBirth) {
-        this.name = name;
+        this.name = removeExtraEmptySpacesAndLines(name);
         this.dateOfBirth = dateOfBirth;
     }
 

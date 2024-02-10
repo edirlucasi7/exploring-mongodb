@@ -1,12 +1,11 @@
 package com.example.mongodb.subject;
 
-import jakarta.validation.constraints.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.example.mongodb.utils.StringUtils.removeExtraEmptySpacesAndLines;
@@ -36,14 +35,18 @@ public class Subject {
     @Deprecated
     public Subject() {}
 
-    public Subject(String name, Long code, Long workload, Map<ObjectId, String> existingStudent) {
+    public Subject(String name, Long code, Long workload, Map<ObjectId, String> existingStudents) {
         this.name = removeExtraEmptySpacesAndLines(name);
         this.code = code;
         this.workload = workload;
-        this.studentsEnrollment = existingStudent.entrySet().stream()
+        this.studentsEnrollment = existingStudents.entrySet().stream()
                 .map(enrollmentRequest ->
                         new StudentEnrollment(valueOf(enrollmentRequest.getKey()), enrollmentRequest.getValue()))
                 .collect(Collectors.toSet());
+    }
+
+    public void addStudents(Set<StudentEnrollment> studentsEnrollment) {
+        this.studentsEnrollment.addAll(studentsEnrollment);
     }
 
     public ObjectId getId() {

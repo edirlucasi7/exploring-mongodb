@@ -1,10 +1,10 @@
 package com.example.mongodb.subject;
 
 import com.example.mongodb.subject.request.StudentEnrollmentRequest;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
 import org.bson.types.ObjectId;
 
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.util.Map;
 import java.util.Set;
 

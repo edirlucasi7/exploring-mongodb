@@ -1,44 +1,49 @@
 package com.example.mongodb.subject;
 
+import com.example.mongodb.customValidators.NoNullElements;
+import com.example.mongodb.exception.NotFoundException;
 import com.example.mongodb.student.Student;
 import com.example.mongodb.student.StudentRepository;
 import com.example.mongodb.subject.messageError.ErrorResultBody;
 import com.example.mongodb.subject.request.StudentEnrollmentRequest;
 import com.example.mongodb.subject.response.SubjectsResponse;
-import jakarta.validation.Valid;
+import com.example.mongodb.subject.validator.DuplicateValuesForDisciplineValidator;
 import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.example.mongodb.utils.StringUtils.removeExtraEmptySpacesAndLines;
+import static java.lang.String.valueOf;
 
-@Controller
+@Validated
+@RestController
 public class SubjectController {
 
     private final SubjectRepository subjectRepository;
     private final StudentRepository studentRepository;
     private final StudentEnrollmentValidator studentEnrollmentValidator;
+    private final DuplicateValuesForDisciplineValidator duplicateValuesForDisciplineValidator;
 
-    public SubjectController(SubjectRepository subjectRepository, StudentRepository studentRepository, StudentEnrollmentValidator studentEnrollmentValidator) {
+    public SubjectController(SubjectRepository subjectRepository, StudentRepository studentRepository, StudentEnrollmentValidator studentEnrollmentValidator, DuplicateValuesForDisciplineValidator duplicateValuesForDisciplineValidator) {
         this.subjectRepository = subjectRepository;
         this.studentRepository = studentRepository;
         this.studentEnrollmentValidator = studentEnrollmentValidator;
+        this.duplicateValuesForDisciplineValidator = duplicateValuesForDisciplineValidator;
     }
+
+    @InitBinder("subjectRequest")
+    public void initBinder(WebDataBinder webDataBinder) { webDataBinder.addValidators(duplicateValuesForDisciplineValidator); }
 
     @Transactional
     @PostMapping("/api/subject/create")
     public ResponseEntity<?> save(@Valid @RequestBody SubjectRequest subjectRequest) {
-        String subjectName = removeExtraEmptySpacesAndLines(subjectRequest.name());
-        Optional<Subject> optionalSubject = subjectRepository.findByName(subjectName);
-        if (optionalSubject.isPresent()) {
-            return ResponseEntity.badRequest().body(new ErrorResultBody(List.of("There is already a subject with the name: %s".formatted(subjectName))));
-        }
-
         Set<ObjectId> studentIds = subjectRequest.studentsEnrollment().stream().map(StudentEnrollmentRequest::studentId).collect(Collectors.toSet());
         Map<ObjectId, String> existingStudent = studentRepository.findAllByIdIn(studentIds).stream().collect(Collectors.toMap(Student::getId, Student::getName));
         if (!studentEnrollmentValidator.isValid(studentIds, existingStudent.keySet())) {
@@ -49,6 +54,28 @@ public class SubjectController {
         subjectRepository.save(subject);
 
         return ResponseEntity.ok("subject created with success");
+    }
+
+    @Transactional
+    @PutMapping("/api/subject/{code}/add/students")
+    public ResponseEntity<?> addEnrollments(@PathVariable Long code,
+                                         @NotEmpty(message = "The enrollment list is not empty")
+                                         @NoNullElements(message = "The enrollment list cannot contain null values")
+                                         @RequestBody List<@Valid StudentEnrollmentRequest> studentEnrollmentRequests) {
+        Subject subjectByCode = subjectRepository.findByCode(code).orElseThrow(NotFoundException::new);
+
+        Set<ObjectId> studentIds = studentEnrollmentRequests.stream().map(StudentEnrollmentRequest::studentId).collect(Collectors.toSet());
+        Map<ObjectId, String> existingStudents = studentRepository.findAllByIdIn(studentIds).stream().collect(Collectors.toMap(Student::getId, Student::getName));
+        if (!studentEnrollmentValidator.isValid(studentIds, existingStudents.keySet())) {
+            return ResponseEntity.badRequest().body(new ErrorResultBody(studentEnrollmentValidator.getErrors()));
+        }
+
+        Set<StudentEnrollment> studentEnrollments = existingStudents.entrySet().stream().map(enrollmentRequest ->
+                        new StudentEnrollment(valueOf(enrollmentRequest.getKey()), enrollmentRequest.getValue())).collect(Collectors.toSet());
+        subjectByCode.addStudents(studentEnrollments);
+        subjectRepository.save(subjectByCode);
+
+        return ResponseEntity.ok("success");
     }
 
     @GetMapping("/api/subjects")

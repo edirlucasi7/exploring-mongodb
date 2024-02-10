@@ -1,16 +1,16 @@
 package com.example.mongodb.student;
 
+import com.example.mongodb.exception.NotFoundException;
 import com.example.mongodb.student.request.StudentRequest;
 import com.example.mongodb.student.response.StudentsResponse;
 import com.example.mongodb.subject.messageError.ErrorResultBody;
-import jakarta.validation.Valid;
 import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class StudentController {
@@ -54,12 +54,8 @@ public class StudentController {
     @Transactional
     @PutMapping("/api/student/update/{id}")
     public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody StudentRequest studentRequest) {
-        Optional<Student> optionalStudent = studentRepository.findById(new ObjectId(id));
-        if (optionalStudent.isEmpty()) return ResponseEntity.notFound().build();
-
-        Student student = optionalStudent.get();
+        Student student = studentRepository.findById(new ObjectId(id)).orElseThrow(NotFoundException::new);
         studentRepository.save(student.update(studentRequest));
-
         return ResponseEntity.ok("student updated with success");
     }
 

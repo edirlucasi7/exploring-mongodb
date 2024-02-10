@@ -1,6 +1,5 @@
 package com.example.mongodb.subject;
 
-import com.example.mongodb.student.Student;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
@@ -10,7 +9,7 @@ import java.util.*;
 @Repository
 public interface SubjectRepository extends MongoRepository<Subject, UUID> {
 
-    Optional<Subject> findByName(String name);
+    Optional<Subject> findByCode(Long code);
 
     void deleteById(ObjectId id);
 

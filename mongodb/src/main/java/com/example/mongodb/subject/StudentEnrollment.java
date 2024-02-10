@@ -1,8 +1,9 @@
 package com.example.mongodb.subject;
 
-import jakarta.validation.constraints.NotNull;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class StudentEnrollment {
 
@@ -30,5 +31,18 @@ public class StudentEnrollment {
 
     public LocalDate getEnrollment() {
         return enrollment;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StudentEnrollment that = (StudentEnrollment) o;
+        return Objects.equals(studentId, that.studentId) && Objects.equals(name, that.name) && Objects.equals(enrollment, that.enrollment);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(studentId, name, enrollment);
     }
 }
