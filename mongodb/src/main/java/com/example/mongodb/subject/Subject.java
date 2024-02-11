@@ -5,7 +5,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.example.mongodb.utils.StringUtils.removeExtraEmptySpacesAndLines;

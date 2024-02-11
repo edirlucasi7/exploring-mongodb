@@ -1,6 +1,5 @@
 package com.example.mongodb.subject;
 
-
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -8,13 +7,13 @@ import java.util.Objects;
 public class StudentEnrollment {
 
     @NotNull
-    private String studentId;
+    private final String studentId;
 
     @NotNull
-    private String name;
+    private final String name;
 
     @NotNull
-    private LocalDate enrollment = LocalDate.now();
+    private final LocalDate enrollment = LocalDate.now();
 
     public StudentEnrollment(String studentId, String name) {
         this.studentId = studentId;
@@ -38,11 +37,11 @@ public class StudentEnrollment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         StudentEnrollment that = (StudentEnrollment) o;
-        return Objects.equals(studentId, that.studentId) && Objects.equals(name, that.name) && Objects.equals(enrollment, that.enrollment);
+        return Objects.equals(studentId, that.studentId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(studentId, name, enrollment);
+        return Objects.hash(studentId);
     }
 }

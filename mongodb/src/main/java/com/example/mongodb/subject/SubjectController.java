@@ -79,7 +79,7 @@ public class SubjectController {
     }
 
     @Transactional
-    @PutMapping("/api/subject/{code}/add/students")
+    @PutMapping("/api/subject/{code}/remove/students")
     public ResponseEntity<?> removeEnrollments(@PathVariable Long code,
                                             @NotEmpty(message = "The enrollment list is not empty")
                                             @NoNullElements(message = "The enrollment list cannot contain null values")
