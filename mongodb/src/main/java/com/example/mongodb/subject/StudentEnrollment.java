@@ -7,13 +7,13 @@ import java.util.Objects;
 public class StudentEnrollment {
 
     @NotNull
-    private final String studentId;
+    private String studentId;
 
     @NotNull
-    private final String name;
+    private String name;
 
     @NotNull
-    private final LocalDate enrollment = LocalDate.now();
+    private LocalDate enrollment = LocalDate.now();
 
     public StudentEnrollment(String studentId, String name) {
         this.studentId = studentId;
