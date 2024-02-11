@@ -139,4 +139,96 @@ Obs: Para o endpoint acima, foi implementao um "cache" em memória de todos os e
 }
 ```
 
-Obs: O endpoint acima valida se todos os estudantes da disciplina em questão, realmente existem na base de dados e mapeia o nome de acordo com seu `ObjectId`. E também não permite mais de uma disciplina com o mesmo nome (descondirerando espaços em branco a mais e quebras de linhas)
+Obs: O endpoint acima valida se todos os estudantes da disciplina em questão, realmente existem na base de dados e mapeia o nome de acordo com seu `ObjectId`. E também não permite mais de uma disciplina com o mesmo `code`.
+
+* Para adicionar uma matrícula numa determinada disciplina, basta mandar uma requisição `PUT` para url: `http://localhost:8081/api/subject/{code}/add/students`, passando o código da disciplina e o seguinte corpo:
+
+```
+[
+	{
+		"studentId": "65b6a643ebc35069484e90e8"
+	}	
+]
+```
+
+Obs: O endpoint acima valida elementos nulos na lista, lista vazia, e define o parâmetro `studentId` como um atributo obrigatório. Não é permitido que alunos que não existam na coleção student sejam adicionaod numa disciplina.
+
+
+* Para remover uma matrícula numa determinada disciplina, basta mandar uma requisição `PUT` para url: `http://localhost:8081/api/subject/{code}/remove/students`, passando o código da disciplina e o seguinte corpo:
+
+```
+[
+	{
+		"studentId": "65b6a643ebc35069484e90e8"
+	}	
+]
+```
+
+Obs: O endpoint acima valida elementos nulos na lista, lista vazia, e define o parâmetro `studentId` como um atributo obrigatório.
+
+* Para listar todas as disciplinas, basta mandar uma requisição `GET` para url: `http://localhost:8081/api/subjects`
+
+```
+{
+	"subjects": [
+		{
+			"id": "65c687f72bc6b95661cda24e",
+			"name": "ANALISE E DESENVOLVIMENTO DE SISTEMAS",
+			"code": 1718,
+			"workload": 48,
+			"createdAt": "2024-02-09",
+			"studentsEnrollment": [
+				{
+					"studentId": "65c687dc2bc6b95661cda24d",
+					"name": "Edir Lucas Icety",
+					"enrollment": "2024-02-09"
+				},
+				{
+					"studentId": "65c687c62bc6b95661cda24c",
+					"name": "Pedro Mirage Icety",
+					"enrollment": "2024-02-10"
+				},
+				{
+					"studentId": "65c807a928b4400a3831397f",
+					"name": "Mara Rubia Icety",
+					"enrollment": "2024-02-10"
+				}
+			]
+		}
+	]
+}
+```
+
+* Para remover uma disciplina, basta mandar uma requisição `DELETE` para url: `http://localhost:8081/api/subject/delete/{id}`, passando o `ObjectId` que referencia a disciplina.
+
+```
+{
+	"subjects": [
+		{
+			"id": "65c687f72bc6b95661cda24e",
+			"name": "ANALISE E DESENVOLVIMENTO DE SISTEMAS",
+			"code": 1718,
+			"workload": 48,
+			"createdAt": "2024-02-09",
+			"studentsEnrollment": [
+				{
+					"studentId": "65c687dc2bc6b95661cda24d",
+					"name": "Edir Lucas Icety",
+					"enrollment": "2024-02-09"
+				},
+				{
+					"studentId": "65c687c62bc6b95661cda24c",
+					"name": "Pedro Mirage Icety",
+					"enrollment": "2024-02-10"
+				},
+				{
+					"studentId": "65c807a928b4400a3831397f",
+					"name": "Mara Rubia Icety",
+					"enrollment": "2024-02-10"
+				}
+			]
+		}
+	]
+}
+```
+
