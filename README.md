@@ -201,34 +201,3 @@ Obs: O endpoint acima valida elementos nulos na lista, lista vazia, e define o p
 
 * Para remover uma disciplina, basta mandar uma requisição `DELETE` para url: `http://localhost:8081/api/subject/delete/{id}`, passando o `ObjectId` que referencia a disciplina.
 
-```
-{
-	"subjects": [
-		{
-			"id": "65c687f72bc6b95661cda24e",
-			"name": "ANALISE E DESENVOLVIMENTO DE SISTEMAS",
-			"code": 1718,
-			"workload": 48,
-			"createdAt": "2024-02-09",
-			"studentsEnrollment": [
-				{
-					"studentId": "65c687dc2bc6b95661cda24d",
-					"name": "Edir Lucas Icety",
-					"enrollment": "2024-02-09"
-				},
-				{
-					"studentId": "65c687c62bc6b95661cda24c",
-					"name": "Pedro Mirage Icety",
-					"enrollment": "2024-02-10"
-				},
-				{
-					"studentId": "65c807a928b4400a3831397f",
-					"name": "Mara Rubia Icety",
-					"enrollment": "2024-02-10"
-				}
-			]
-		}
-	]
-}
-```
-
