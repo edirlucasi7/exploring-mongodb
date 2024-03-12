@@ -81,7 +81,7 @@ Obs:
 
 ![image](https://github.com/edirlucasi7/exploring-mongodb/assets/28410756/ce79570f-f1a0-40f9-b02d-7868e4908670)
 
-* Para a coleção `subject` utilizamos a desnormalização dos dados, optando por replicar somente o nome dos estudantes matriculados na disciplina, além do `ObjectId` para garantir a consistência dos dados.
+* Para a coleção `subject` utilizamos a desnormalização dos dados, optando por replicar somente o nome dos estudantes matriculados na disciplina, além do `ObjectId` como referência do `student` para garantir a consistência dos dados.
 
 ![image](https://github.com/edirlucasi7/exploring-mongodb/assets/28410756/a559ea11-a103-47e1-859e-1717241afd27)
 
@@ -200,4 +200,16 @@ Obs: O endpoint acima valida elementos nulos na lista, lista vazia, e define o p
 ```
 
 * Para remover uma disciplina, basta mandar uma requisição `DELETE` para url: `http://localhost:8081/api/subject/delete/{id}`, passando o `ObjectId` que referencia a disciplina.
+
+* Para atualizar as informações de uma disciplina, basta mandar uma requisição `PUT` para url: `http://localhost:8081/api/subject/update/{id}`, passando o `ObjectId` da disciplina e o seguinte corpo:
+
+```
+{
+	"name": "ANALISE E DESENVOLVIMENTO DE SISTEMAS",
+	"code": "1718",
+	"workload": "48"
+}
+```
+
+Obs: O endpoint de atualização acima faz uma migração preguiçosa do campo `workload` de `Long` para `String`, usando a estratégia de atualizar somente quando o documento é trago para a memória.
 
