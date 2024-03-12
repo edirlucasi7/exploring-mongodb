@@ -14,7 +14,7 @@ public class SubjectResponse {
     public String id;
     private String name;
     private Long code;
-    private Long workload;
+    private String workload;
     private LocalDate createdAt;
     private Set<StudentEnrollment> studentsEnrollment;
 
@@ -39,7 +39,7 @@ public class SubjectResponse {
         return code;
     }
 
-    public Long getWorkload() {
+    public String getWorkload() {
         return workload;
     }
 

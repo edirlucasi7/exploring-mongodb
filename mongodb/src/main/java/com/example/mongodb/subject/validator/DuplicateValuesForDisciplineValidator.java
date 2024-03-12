@@ -18,12 +18,12 @@ public class DuplicateValuesForDisciplineValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return SubjectRequest.class.isAssignableFrom(clazz);
+        return SubjectCreateRequest.class.isAssignableFrom(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        SubjectRequest request = (SubjectRequest)target;
+        SubjectCreateRequest request = (SubjectCreateRequest)target;
         Optional<Subject> optionalSubject = subjectRepository.findByCode(request.code());
         if (optionalSubject.isPresent()) {
             errors.rejectValue("code", null, "code already exist");

@@ -8,10 +8,10 @@ import javax.validation.constraints.*;
 import java.util.Map;
 import java.util.Set;
 
-public record SubjectRequest(
+public record SubjectCreateRequest(
         @NotBlank String name,
         @NotNull Long code,
-        @NotNull @Min(value = 6) Long workload,
+        @NotNull String workload,
         @Valid Set<StudentEnrollmentRequest> studentsEnrollment
 ) {
 

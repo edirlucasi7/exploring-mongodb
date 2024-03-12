@@ -43,17 +43,32 @@ public class SubjectController {
 
     @Transactional
     @PostMapping("/api/subject/create")
-    public ResponseEntity<?> save(@Valid @RequestBody SubjectRequest subjectRequest) {
-        Set<ObjectId> studentIds = subjectRequest.studentsEnrollment().stream().map(StudentEnrollmentRequest::studentId).collect(Collectors.toSet());
+    public ResponseEntity<?> save(@Valid @RequestBody SubjectCreateRequest subjectCreateRequest) {
+        Set<ObjectId> studentIds = subjectCreateRequest.studentsEnrollment().stream().map(StudentEnrollmentRequest::studentId).collect(Collectors.toSet());
         Map<ObjectId, String> existingStudent = studentRepository.findAllByIdIn(studentIds).stream().collect(Collectors.toMap(Student::getId, Student::getName));
         if (!studentEnrollmentValidator.isValid(studentIds, existingStudent.keySet())) {
             return ResponseEntity.badRequest().body(new ErrorResultBody(studentEnrollmentValidator.getErrors()));
         }
 
-        Subject subject = subjectRequest.toModel(existingStudent);
+        Subject subject = subjectCreateRequest.toModel(existingStudent);
         subjectRepository.save(subject);
 
         return ResponseEntity.ok("subject created with success");
+    }
+
+    @Transactional
+    @PutMapping("/api/subject/update/{id}")
+    public ResponseEntity<?> update(@PathVariable String id, @Valid @RequestBody SubjectUpdateRequest subjectUpdateRequest) {
+        ObjectId objectId = new ObjectId(id);
+        Optional<Subject> optionalSubject = subjectRepository.findById(objectId);
+        if (optionalSubject.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Subject subject = optionalSubject.get();
+        subjectRepository.save(subject.update(subjectUpdateRequest));
+
+        return ResponseEntity.ok("subject updated with success");
     }
 
     @Transactional
@@ -110,6 +125,6 @@ public class SubjectController {
 
         subjectRepository.deleteById(objectId);
 
-        return ResponseEntity.ok("subject with objectId: %s deleted" + id);
+        return ResponseEntity.ok("subject with objectId: %s deleted " + id);
     }
 }

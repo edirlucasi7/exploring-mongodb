@@ -25,8 +25,7 @@ public class Subject {
     private Long code;
 
     @NotNull
-    @Min(value = 6)
-    private Long workload;
+    private String workload;
 
     @NotNull
     private LocalDate createdAt = LocalDate.now();
@@ -36,7 +35,7 @@ public class Subject {
     @Deprecated
     public Subject() {}
 
-    public Subject(String name, Long code, Long workload, Map<ObjectId, String> existingStudents) {
+    public Subject(String name, Long code, String workload, Map<ObjectId, String> existingStudents) {
         this.name = removeExtraEmptySpacesAndLines(name);
         this.code = code;
         this.workload = workload;
@@ -66,7 +65,7 @@ public class Subject {
         return code;
     }
 
-    public Long getWorkload() {
+    public String getWorkload() {
         return workload;
     }
 
@@ -76,6 +75,13 @@ public class Subject {
 
     public Set<StudentEnrollment> getStudentsEnrollment() {
         return studentsEnrollment;
+    }
+
+    public Subject update(SubjectUpdateRequest subjectUpdateRequest) {
+        this.name = subjectUpdateRequest.name();
+        this.code = subjectUpdateRequest.code();
+        this.workload = subjectUpdateRequest.workload();
+        return this;
     }
 }
 
